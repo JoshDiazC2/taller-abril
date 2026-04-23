@@ -18,3 +18,17 @@ export const memberListSchema = {
   type: 'array',
   items: { $ref: 'Member#' },
 } as const
+
+export const createGuestMemberBodySchema = {
+  type: 'object',
+  required: ['name', 'bio'],
+  properties: {
+    name: { type: 'string', minLength: 1, maxLength: 80 },
+    bio: { type: 'string', minLength: 1, maxLength: 500 },
+    avatarUrl: { type: 'string', format: 'uri' },
+    instagramUrl: { type: 'string', format: 'uri' },
+    linkedinUrl: { type: 'string', format: 'uri' },
+    githubUrl: { type: 'string', format: 'uri' },
+  },
+  additionalProperties: false,
+} as const
