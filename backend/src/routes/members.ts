@@ -1,5 +1,4 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { members } from '../data/index.js'
 import { memberListSchema } from '../schemas/index.js'
 
 const membersRoutes: FastifyPluginAsync = async (membersRoutes) => {
@@ -12,7 +11,7 @@ const membersRoutes: FastifyPluginAsync = async (membersRoutes) => {
         response: { 200: memberListSchema },
       },
     },
-    async () => members,
+    async () => membersRoutes.prisma.member.findMany({ orderBy: { id: 'asc' } }),
   )
 }
 

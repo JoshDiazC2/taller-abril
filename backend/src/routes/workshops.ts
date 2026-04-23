@@ -1,5 +1,4 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { members, workshops } from '../data/index.js'
 import { workshopListSchema } from '../schemas/index.js'
 
 const workshopsRoutes: FastifyPluginAsync = async (workshopsRoutes) => {
@@ -12,15 +11,18 @@ const workshopsRoutes: FastifyPluginAsync = async (workshopsRoutes) => {
         response: { 200: workshopListSchema },
       },
     },
-    async () =>
-      workshops.map((w) => ({
+    async () => {
+      const workshops = await workshopsRoutes.prisma.workshop.findMany({
+        orderBy: { id: 'asc' },
+        include: { presenters: { include: { member: true } } },
+      })
+      return workshops.map((w) => ({
         id: w.id,
         title: w.title,
         description: w.description,
-        presenters: w.presenterIds
-          .map((id) => members.find((m) => m.id === id))
-          .filter((m): m is (typeof members)[number] => m !== undefined),
-      })),
+        presenters: w.presenters.map((p) => p.member),
+      }))
+    },
   )
 }
 

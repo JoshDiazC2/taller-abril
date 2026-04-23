@@ -7,7 +7,7 @@ export const postSummarySchema = {
     title: { type: 'string' },
     slug: { type: 'string' },
     excerpt: { type: 'string' },
-    author: { type: 'string' },
+    author: { $ref: 'Member#' },
     publishedAt: { type: 'string', format: 'date-time' },
   },
 } as const
@@ -22,7 +22,7 @@ export const postSchema = {
     slug: { type: 'string' },
     excerpt: { type: 'string' },
     body: { type: 'string', description: 'Contenido en markdown' },
-    author: { type: 'string' },
+    author: { $ref: 'Member#' },
     publishedAt: { type: 'string', format: 'date-time' },
   },
 } as const

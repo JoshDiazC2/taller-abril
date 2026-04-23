@@ -1,5 +1,4 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { posts } from '../data/index.js'
 import { postParamsSchema, postSummaryListSchema } from '../schemas/index.js'
 
 const postsRoutes: FastifyPluginAsync = async (postsRoutes) => {
@@ -8,14 +7,16 @@ const postsRoutes: FastifyPluginAsync = async (postsRoutes) => {
     {
       schema: {
         tags: ['posts'],
-        summary: 'Listar posts del blog (sin body)',
+        summary: 'Listar posts del blog (sin body, con author)',
         response: { 200: postSummaryListSchema },
       },
     },
     async () => {
-      return [...posts]
-        .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
-        .map(({ body: _body, ...summary }) => summary)
+      const posts = await postsRoutes.prisma.post.findMany({
+        orderBy: { publishedAt: 'desc' },
+        include: { author: true },
+      })
+      return posts.map(({ body: _body, authorId: _authorId, ...rest }) => rest)
     },
   )
 
@@ -24,7 +25,7 @@ const postsRoutes: FastifyPluginAsync = async (postsRoutes) => {
     {
       schema: {
         tags: ['posts'],
-        summary: 'Obtener un post (body en markdown) por id',
+        summary: 'Obtener un post (body en markdown, con author) por id',
         params: postParamsSchema,
         response: {
           200: { $ref: 'Post#' },
@@ -40,11 +41,15 @@ const postsRoutes: FastifyPluginAsync = async (postsRoutes) => {
       },
     },
     async (request, reply) => {
-      const post = posts.find((p) => p.id === request.params.id)
+      const post = await postsRoutes.prisma.post.findUnique({
+        where: { id: request.params.id },
+        include: { author: true },
+      })
       if (!post) {
         return reply.notFound(`No existe el post con id "${request.params.id}"`)
       }
-      return post
+      const { authorId: _authorId, ...rest } = post
+      return rest
     },
   )
 }

@@ -1,0 +1,57 @@
+// Prisma schema del backend ACECOM.
+// Todo el contenido del portal (miembros, talleres, posts) vive en SQLite
+// y se puebla desde prisma/seed.sql.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Member {
+  id           String  @id
+  name         String
+  role         String
+  bio          String
+  avatarUrl    String?
+  instagramUrl String?
+  linkedinUrl  String?
+  githubUrl    String?
+
+  workshops WorkshopPresenter[]
+  posts     Post[]
+}
+
+model Workshop {
+  id          String @id
+  title       String
+  description String
+
+  presenters WorkshopPresenter[]
+}
+
+model WorkshopPresenter {
+  workshopId String
+  workshop   Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  memberId   String
+  member     Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@id([workshopId, memberId])
+  @@index([workshopId])
+  @@index([memberId])
+}
+
+model Post {
+  id          String   @id
+  title       String
+  slug        String   @unique
+  excerpt     String
+  body        String   // markdown
+  authorId    String
+  author      Member   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  publishedAt DateTime
+
+  @@index([authorId])
+}
