@@ -3,7 +3,13 @@ import cors from '@fastify/cors'
 import sensible from '@fastify/sensible'
 import { prismaPlugin, swaggerPlugin } from './plugins/index.js'
 import apiRouter from './routes/index.js'
-import { memberSchema, postSchema, postSummarySchema, workshopSchema } from './schemas/index.js'
+import {
+  commentSchema,
+  memberSchema,
+  postSchema,
+  postSummarySchema,
+  workshopSchema,
+} from './schemas/index.js'
 
 export async function buildApp(): Promise<FastifyInstance> {
   const app = Fastify({ logger: true })
@@ -18,6 +24,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   app.addSchema(workshopSchema)
   app.addSchema(postSummarySchema)
   app.addSchema(postSchema)
+  app.addSchema(commentSchema)
 
   await app.register(apiRouter, { prefix: '/api' })
 

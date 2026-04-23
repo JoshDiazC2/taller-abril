@@ -1,6 +1,6 @@
 // Prisma schema del backend ACECOM.
-// Todo el contenido del portal (miembros, talleres, posts) vive en SQLite
-// y se puebla desde prisma/seed.sql.
+// Todo el contenido del portal (miembros, talleres, posts, comentarios) vive en SQLite
+// y los datos iniciales se pueblan desde prisma/seed.sql.
 
 generator client {
   provider = "prisma-client-js"
@@ -53,5 +53,19 @@ model Post {
   author      Member   @relation(fields: [authorId], references: [id], onDelete: Cascade)
   publishedAt DateTime
 
+  comments Comment[]
+
   @@index([authorId])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  name      String
+  body      String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([postId, approved])
 }
