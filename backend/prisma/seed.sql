@@ -7,7 +7,7 @@
 -- Miembros de ACECOM
 -- ==============================
 
-INSERT INTO Member (id, name, role, bio, instagramUrl, linkedinUrl, githubUrl) VALUES
+INSERT OR REPLACE INTO Member (id, name, role, bio, instagramUrl, linkedinUrl, githubUrl) VALUES
   ('m1', 'Jose Muñoz', 'Presidente',
    'Preside ACECOM y representa a la asociación ante la universidad.',
    NULL, NULL, NULL),
@@ -36,7 +36,7 @@ INSERT INTO Member (id, name, role, bio, instagramUrl, linkedinUrl, githubUrl) V
 -- Talleres
 -- ==============================
 
-INSERT INTO Workshop (id, title, description) VALUES
+INSERT OR REPLACE INTO Workshop (id, title, description) VALUES
   ('w1', 'Introducción al desarrollo web moderno',
    'Recorrido práctico por frontend, backend y despliegue. La base para quienes recién se inician en desarrollo web.'),
 
@@ -54,7 +54,7 @@ INSERT INTO Workshop (id, title, description) VALUES
 -- (authorId → Member.id; body = markdown)
 -- ==============================
 
-INSERT INTO Post (id, title, slug, excerpt, body, authorId, publishedAt) VALUES
+INSERT OR REPLACE INTO Post (id, title, slug, excerpt, body, authorId, publishedAt) VALUES
   ('p1', '¿Por qué separar frontend y backend?', 'por-que-separar-frontend-backend',
    'Una pequeña guía sobre por qué tiene sentido construir frontend y backend como dos piezas distintas que se comunican por una API.',
    '## Responsabilidades distintas
@@ -74,7 +74,7 @@ El backend se ocupa de la lógica del dominio y de servir datos.
 -- (qué miembros presentan cada taller)
 -- ==============================
 
-INSERT INTO WorkshopPresenter (workshopId, memberId) VALUES
+INSERT OR REPLACE INTO WorkshopPresenter (workshopId, memberId) VALUES
   ('w1', 'm4'), -- Sergio presenta el taller de desarrollo web
   ('w1', 'm5'), -- junto con Omar
   ('w2', 'm1'), -- Jose presenta Git
