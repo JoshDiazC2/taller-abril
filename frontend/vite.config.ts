@@ -14,4 +14,8 @@ export default defineConfig({
             dirs: ['src/components'],
         }),
     ],
+    preview: {
+        // Railway serves the app from generated hostnames; allow them in preview mode.
+        allowedHosts: true,
+    },
 })
