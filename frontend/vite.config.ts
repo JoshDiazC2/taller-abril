@@ -15,10 +15,9 @@ export default defineConfig({
         }),
     ],
     server: {
-        allowedHosts: ['.up.railway.app'],
+        allowedHosts: true,
     },
     preview: {
-        // Allow Railway generated domains in preview mode.
-        allowedHosts: ['.up.railway.app'],
+        allowedHosts: true,
     },
 })
